@@ -1,0 +1,6 @@
+# Dépendances du projet
+paramiko==3.4.0
+python-dotenv>=1.0.0
+
+# Tests (voir tests/ et .github/workflows/ci.yml)
+pytest>=7.4

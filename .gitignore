@@ -1,0 +1,32 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Environnements virtuels et secrets
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+
+# Données capturées (ne jamais versionner : IP, mots de passe d'attaquants...)
+logs/*
+!logs/.gitkeep
+*.jsonl
+*.log
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Ancienne version du projet et archives
+Ancien honeypot/
+*.zip

@@ -1,0 +1,52 @@
+services:
+  honeypot:
+    build: .
+    image: honeypot:latest
+    container_name: honeypot
+    restart: unless-stopped
+    environment:
+      BIND_HOST: 0.0.0.0
+      LOG_FILE: /var/log/honeypot/events.jsonl
+      SSH_SANDBOX: ${SSH_SANDBOX:-simulate}
+      PORT_HTTP: ${PORT_HTTP:-8080}
+      PORT_SSH: ${PORT_SSH:-2222}
+      PORT_FTP: ${PORT_FTP:-2121}
+      PORT_REDIS: ${PORT_REDIS:-6379}
+      PORT_MYSQL: ${PORT_MYSQL:-3306}
+      PORT_TELNET: ${PORT_TELNET:-2323}
+      PORT_SMTP: ${PORT_SMTP:-2525}
+      PORT_POP3: ${PORT_POP3:-1110}
+      PORT_LDAP: ${PORT_LDAP:-3890}
+      PORT_RDP: ${PORT_RDP:-3389}
+      PORT_POSTGRESQL: ${PORT_POSTGRESQL:-5432}
+      PORT_MUX: ${PORT_MUX:-9000}
+      MUX_ENABLED: ${MUX_ENABLED:-true}
+      MUX_DEFAUT: ${MUX_DEFAUT:-FTP}
+      MUX_DELAI: ${MUX_DELAI:-2.0}
+    # hôte:conteneur -> le trafic des ports "réels" (21, 22, 80...) est redirigé vers les hauts ports du conteneur
+    ports:
+      - "${HOST_PORT_HTTP:-80}:${PORT_HTTP:-8080}"
+      - "${HOST_PORT_SSH:-22}:${PORT_SSH:-2222}"
+      - "${HOST_PORT_FTP:-21}:${PORT_FTP:-2121}"
+      - "${HOST_PORT_REDIS:-6379}:${PORT_REDIS:-6379}"
+      - "${HOST_PORT_MYSQL:-3306}:${PORT_MYSQL:-3306}"
+      - "${HOST_PORT_TELNET:-23}:${PORT_TELNET:-2323}"
+      - "${HOST_PORT_SMTP:-25}:${PORT_SMTP:-2525}"
+      - "${HOST_PORT_POP3:-110}:${PORT_POP3:-1110}"
+      - "${HOST_PORT_LDAP:-389}:${PORT_LDAP:-3890}"
+      - "${HOST_PORT_RDP:-3389}:${PORT_RDP:-3389}"
+      - "${HOST_PORT_POSTGRESQL:-5432}:${PORT_POSTGRESQL:-5432}"
+      - "${HOST_PORT_MUX:-9000}:${PORT_MUX:-9000}"
+    # les logs du conteneur arrivent dans ./logs sur la machine hôte
+    volumes:
+      - ./logs:/var/log/honeypot
+    # durcissement : le honeypot est exposé à des attaquants, on limite ce que le conteneur peut faire
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 512
+    mem_limit: 512m
